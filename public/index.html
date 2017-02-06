@@ -1,0 +1,169 @@
+<html ng-app="mittens">
+<head>
+    <title> hello world</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="angular.route.js"></script>
+    <script type="text/javascript" src="angular-cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.16/angular-messages.min.js"></script>
+
+
+    <script type="text/javascript">
+        var app= angular.module("mittens",['ngRoute','ngCookies','ngMessages']);
+app.config(function($routeProvider,$locationProvider){
+$routeProvider
+  .when('/',{
+    templateUrl:'home.html',
+    controller:'HomeController',
+  })
+  .when('/signup',{
+    templateUrl:'signup.html',
+    controller:'SignupController',
+  });
+  $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+      });
+});
+
+app.run(function($cookies,$rootScope){
+if($cookies.get('token')&&$cookies.get('currentUser')){
+$rootScope.token=$cookies.get('token');
+$rootScope.currentUser=$cookies.get('currentUser');
+}
+});
+
+
+app.controller('HomeController',function($rootScope,$scope, $http, $cookies){
+$scope.submitNewMeow=function(){
+$http.post('/meows',{newMeow:$scope.newMeow},
+{
+  headers:
+  {'authorization':$rootScope.token}}).then(function(){
+getMeows();
+$scope.newMeow='';
+});
+};
+
+
+
+$scope.removeMeow= function(meow)
+{
+$http.put('/meows/remove',{meow:meow},{
+  headers:
+{'authorization':$rootScope.token}}).then(function()
+{
+getMeows();
+
+});
+
+};
+
+$scope.signin=function(){
+  $http.put('/users/signin', {username:$scope.username, password:$scope.password})
+  .then(function(res){
+alert('success');
+$scope.email=res.data.user.email;
+$scope.mobile=res.data.user.mobile;
+
+    $cookies.put('token',res.data.token);
+    $cookies.put('currentUser',$scope.username);
+    $rootScope.token=res.data.token;
+    $rootScope.currentUser=$scope.username;
+  },
+  function(err){
+    alert('bad login credentials');
+  });
+}
+
+$scope.logout=function(){
+    $cookies.remove('token');
+  $cookies.remove('currentUser');
+  $rootScope.token=null;
+  $rootScope.currentUser=null;
+
+
+};
+
+
+ function getMeows()
+{
+  $http.get('/meows').then(function(response)
+    {
+
+    $scope.meows = response.data;
+    });
+}
+getMeows();
+
+});
+
+app.controller('SignupController',function($scope, $http){
+  //error function
+
+/**  $scope.submitForm = function(form) {
+
+      if (form.username.$modelValue != '') {
+          $scope.validationError = true;
+          console.log('show error');
+      }
+      else {
+          $scope.validationError = false;
+          console.log('don\'t show error');
+      }
+    };**/
+
+
+$scope.submitSignup=function()
+{
+var newUser={
+  username:$scope.username,
+  password:$scope.password,
+  email:$scope.email,
+  mobile:$scope.mobile
+};
+$http.post('/users',newUser).then(function(){
+  $scope.username='';
+  $scope.password='';
+  $scope.email='';
+  $scope.mobile='';
+  alert('success');
+
+
+});
+}
+});
+
+
+
+
+    </script>
+
+    <!--<st
+    yle>
+        .feed{
+            margin-left: 100px;
+            margin-right:100px;
+            margin-top: 50px;
+            min-height: 500px;
+
+        }
+       .feed h3{
+            border: 1px solid black;
+            padding: 20px;
+
+        }
+        .page-title{
+           margin-left: 100px;
+
+        }
+
+    </style>-->
+</head>
+<body>
+<h1 class="page-title"><a href="/">MEAN STACK APP</a></h1>
+<div ng-view>
+</div>
+</body>
+</html>

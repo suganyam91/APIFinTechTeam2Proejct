@@ -1,0 +1,51 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="home.css">
+
+</head>
+<body>
+<div class="row feed">
+    <div class="col-md-4">
+      <div class="login-page">
+<div ng-hide="currentUser">
+        <h2>LOGIN</h2>
+        <br>
+        <form class="login-form">
+        <input type="text" size="30" placeholder="login" ng-model="username">
+        <br><br>
+        <input type="password" size="30" placeholder="password" ng-model="password">
+        <br><br>
+        <button type="button" ng-click="signin()">Log In</button>
+        <br><br>
+        Not a member?<a href="/signup"> Create an account</a>
+      </form>
+</div>
+</div>
+
+<div ng-show="currentUser">
+  HELLO {{currentUser}},<br><br>
+  Your personal details here:<br><br>
+  Full name: {{currentUser}}<br><br>
+  Email:     {{email}}<br><br>
+  Contact no:{{mobile}}
+<br><br>
+  <a href ng-click="logout()">Logout</a>
+</div>
+    </div>
+    <div class="col-md-8">
+        <div class="new-meow" ng-show="currentUser">
+            <input type="text" class="form-control" ng-model="newMeow" placeholder="what do u say?">
+            <button type="button" ng-click="submitNewMeow()">submit</button>
+        </div>
+<h3 ng-repeat="meow in meows">
+<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+{{meow.text}}
+    <a href ng-click="removeMeow(meow)"><span class ="glyphicon glyphicon-remove " aria-hidden="true"></span>
+    </a>
+    <br>
+  <small>{{meow.username}}</small>
+</h3>
+ </div>
+</div>
+</body>
+</html>

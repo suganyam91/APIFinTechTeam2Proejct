@@ -1,0 +1,27 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="signup.css">
+
+</head>
+
+<body>
+  <form name="signupForm">
+  <div class="signup-form">
+<h2>signup page
+</h2>
+<input type="text" placeholder="username" ng-model="username" name="username" required>
+<br><br>
+<input type="email" placeholder="email id" ng-model="email" required><br><br>
+<input type="text" placeholder="contact number" ng-model="mobile" required><br><br>
+<input type="password" placeholder="password" ng-model="password" required><br><br>
+<div style="text-align: center">
+  <input type="button" value="signup" ng-model="signin"class="btn-success" ng-disabled="signupForm.$invalid" ng-click="submitSignup()">
+</div>
+
+</div>
+</form>
+</body>
+</html>
